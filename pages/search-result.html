@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>搜索结果 - 煤矿安全风向标</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#1e3a5f',
+                        'deep-blue-light': '#2d5a87',
+                        'safety-orange': '#f97316',
+                        'alert-red': '#dc2626',
+                        'bg-primary': '#f8fafc',
+                        'bg-secondary': '#f1f5f9',
+                        'text-primary': '#1e293b',
+                        'text-secondary': '#475569',
+                        'text-muted': '#94a3b8',
+                    },
+                    fontFamily: {
+                        'sans': ['Noto Sans SC', 'PingFang SC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif; background-color: #f8fafc; }
+        .source-item { transition: all 0.2s ease; }
+        .source-item:active { transform: scale(0.98); }
+        ::-webkit-scrollbar { width: 0; display: none; }
+        /* 毛玻璃效果 */
+        .glass-effect { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        /* AI光晕 */
+        .ai-glow { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.3); }
+        /* 脑图节点 */
+        .mind-node { transition: all 0.3s ease; }
+        .mind-node:hover { transform: scale(1.05); }
+        /* 打字机效果 */
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #1e3a5f; }
+    </style>
+</head>
+<body class="bg-bg-primary text-text-primary">
+    <!-- 顶部导航 -->
+    <header class="sticky top-0 z-50 glass-effect border-b border-slate-200/50">
+        <div class="flex items-center px-4 py-3 space-x-3">
+            <button onclick="history.back()" class="text-text-secondary hover:text-deep-blue transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="flex-1 relative">
+                <input type="text" value="2026年瓦斯抽采合规标准有哪些变化？" class="w-full bg-slate-100 rounded-xl py-2 px-4 text-sm text-text-primary placeholder-text-muted" readonly>
+            </div>
+            <button class="action-btn w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center" id="share-btn">
+                <i class="fa-solid fa-share-nodes text-sm text-text-secondary"></i>
+            </button>
+        </div>
+
+        <!-- 模式切换 -->
+        <div class="flex space-x-2 px-4 pb-3">
+            <button class="mode-tab px-4 py-2 rounded-lg text-sm font-medium bg-deep-blue text-white shadow-sm" data-mode="document">
+                <i class="fa-solid fa-file-lines mr-1"></i>文稿模式
+            </button>
+            <button class="mode-tab px-4 py-2 rounded-lg text-sm bg-slate-100 text-text-secondary" data-mode="mindmap">
+                <i class="fa-solid fa-sitemap mr-1"></i>脑图模式
+            </button>
+            <button class="mode-tab px-4 py-2 rounded-lg text-sm bg-slate-100 text-text-secondary" data-mode="qa">
+                <i class="fa-solid fa-comments mr-1"></i>问答模式
+            </button>
+        </div>
+    </header>
+
+    <!-- 文稿模式 -->
+    <main id="document-mode" class="px-4 py-4 pb-24 overflow-y-auto">
+        <!-- AI来源说明 -->
+        <div class="flex items-center space-x-2 mb-4 text-xs text-text-muted">
+            <div class="w-5 h-5 rounded-lg ai-glow flex items-center justify-center">
+                <i class="fa-solid fa-robot text-white text-xs"></i>
+            </div>
+            <span>基于 8 份政策文件生成</span>
+        </div>
+
+        <!-- 报告内容 -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <!-- 大纲 -->
+            <div class="p-4 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-deep-blue mb-3 flex items-center">
+                    <i class="fa-solid fa-list-ol mr-2"></i>报告大纲
+                </h2>
+                <ul class="space-y-2 text-sm text-text-secondary">
+                    <li class="flex items-center space-x-2"><i class="fa-solid fa-chevron-right text-xs text-deep-blue"></i><span>一、政策背景</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-solid fa-chevron-right text-xs text-deep-blue"></i><span>二、条款变化对比</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-solid fa-chevron-right text-xs text-deep-blue"></i><span>三、合规要点解读</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-solid fa-chevron-right text-xs text-deep-blue"></i><span>四、实操案例分析</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-solid fa-chevron-right text-xs text-deep-blue"></i><span>五、专家观点与建议</span></li>
+                </ul>
+            </div>
+
+            <!-- 第一章节 -->
+            <div class="p-4 border-b border-slate-100">
+                <h3 class="font-bold text-base text-text-primary mb-3 flex items-center">
+                    <span class="w-6 h-6 rounded-lg bg-deep-blue text-white text-xs flex items-center justify-center mr-2">1</span>
+                    政策背景
+                </h3>
+                <p class="text-sm text-text-secondary leading-relaxed">
+                    2026年1月，国家矿山安全监察局发布《煤矿瓦斯抽采达标暂行规定》修订版，对瓦斯抽采的计量方法、抽采率指标、抽采工程设计等方面进行了重大调整。此次修订是自2018年以来的首次全面更新，旨在适应煤矿智能化发展趋势和安全生产新要求。
+                </p>
+                <div class="mt-3 p-3 bg-slate-50 rounded-xl">
+                    <p class="text-xs text-text-muted">
+                        <i class="fa-solid fa-info-circle mr-1"></i>
+                        引用来源：《煤矿瓦斯抽采达标暂行规定》（2026修订版）第1-3条
+                    </p>
+                </div>
+            </div>
+
+            <!-- 第二章节 - 条款对比 -->
+            <div class="p-4 border-b border-slate-100">
+                <h3 class="font-bold text-base text-text-primary mb-3 flex items-center">
+                    <span class="w-6 h-6 rounded-lg bg-deep-blue text-white text-xs flex items-center justify-center mr-2">2</span>
+                    条款变化对比
+                </h3>
+                
+                <div class="space-y-3">
+                    <div class="bg-slate-50 rounded-xl p-3">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-xs rounded">新增</span>
+                            <span class="text-sm font-medium text-text-primary">抽采率计量方式</span>
+                        </div>
+                        <p class="text-xs text-text-secondary">原规定采用"月平均抽采率"，新规定改为"实时在线监测抽采率"，要求精度达到±5%以内。</p>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-3">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-2 py-0.5 bg-amber-100 text-amber-600 text-xs rounded">调整</span>
+                            <span class="text-sm font-medium text-text-primary">抽采达标指标</span>
+                        </div>
+                        <p class="text-xs text-text-secondary">高瓦斯矿井抽采率下限由55%提升至60%，突出矿井由65%提升至70%。</p>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-3">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">细化</span>
+                            <span class="text-sm font-medium text-text-primary">抽采工程设计要求</span>
+                        </div>
+                        <p class="text-xs text-text-secondary">新增智能化抽采系统设计规范，要求配备自动调节、远程监控功能。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三章节 -->
+            <div class="p-4 border-b border-slate-100">
+                <h3 class="font-bold text-base text-text-primary mb-3 flex items-center">
+                    <span class="w-6 h-6 rounded-lg bg-deep-blue text-white text-xs flex items-center justify-center mr-2">3</span>
+                    合规要点解读
+                </h3>
+                <ul class="space-y-3 text-sm text-text-secondary">
+                    <li class="flex items-start space-x-2">
+                        <i class="fa-solid fa-check-circle text-emerald-500 mt-0.5"></i>
+                        <span><strong class="text-text-primary">设备升级：</strong>需在2027年底前完成在线监测系统改造，预估投入30-80万元/矿井</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa-solid fa-check-circle text-emerald-500 mt-0.5"></i>
+                        <span><strong class="text-text-primary">工艺优化：</strong>建议采用"定向长钻孔+水力压裂"复合抽采工艺提升抽采率</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa-solid fa-check-circle text-emerald-500 mt-0.5"></i>
+                        <span><strong class="text-text-primary">管理提升：</strong>建立抽采达标动态考核机制，每月向监管部门报送数据</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 参考来源 -->
+            <div class="p-4">
+                <h3 class="font-bold text-base text-text-primary mb-3 flex items-center">
+                    <i class="fa-solid fa-link text-deep-blue mr-2"></i>
+                    参考来源（8份文件）
+                </h3>
+                <div class="space-y-2">
+                    <div class="source-item flex items-center space-x-3 p-2 bg-slate-50 rounded-lg cursor-pointer">
+                        <i class="fa-solid fa-file-pdf text-blue-500"></i>
+                        <span class="text-xs text-text-secondary">《煤矿瓦斯抽采达标暂行规定》（2026修订版）</span>
+                    </div>
+                    <div class="source-item flex items-center space-x-3 p-2 bg-slate-50 rounded-lg cursor-pointer">
+                        <i class="fa-solid fa-file-lines text-emerald-500"></i>
+                        <span class="text-xs text-text-secondary">《防治煤与瓦斯突出细则》第28条</span>
+                    </div>
+                    <div class="source-item flex items-center space-x-3 p-2 bg-slate-50 rounded-lg cursor-pointer">
+                        <i class="fa-solid fa-file-lines text-amber-500"></i>
+                        <span class="text-xs text-text-secondary">《煤矿安全规程》第158-165条</span>
+                    </div>
+                    <button class="w-full text-center text-xs text-deep-blue py-2 hover:underline">展开全部 8 份来源</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 脑图模式 -->
+    <main id="mindmap-mode" class="hidden px-4 py-4 pb-24 overflow-y-auto">
+        <div class="flex items-center justify-center h-full min-h-[400px]">
+            <div class="text-center">
+                <div class="inline-block p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="mind-node bg-deep-blue text-white px-6 py-3 rounded-xl mb-4 inline-block font-bold">瓦斯抽采合规变化</div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="w-px h-8 bg-deep-blue mx-auto"></div>
+                            <div class="mind-node bg-blue-100 text-deep-blue px-4 py-2 rounded-lg text-sm font-medium">政策背景</div>
+                            <div class="w-px h-6 bg-deep-blue mx-auto"></div>
+                            <div class="space-y-2 text-xs text-text-secondary">
+                                <div class="bg-slate-50 px-2 py-1 rounded">2026修订版</div>
+                                <div class="bg-slate-50 px-2 py-1 rounded">适应智能化</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-px h-8 bg-deep-blue mx-auto"></div>
+                            <div class="mind-node bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium">条款变化</div>
+                            <div class="w-px h-6 bg-emerald-500 mx-auto"></div>
+                            <div class="space-y-2 text-xs text-text-secondary">
+                                <div class="bg-slate-50 px-2 py-1 rounded">计量方式</div>
+                                <div class="bg-slate-50 px-2 py-1 rounded">抽采率指标</div>
+                                <div class="bg-slate-50 px-2 py-1 rounded">设计规范</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-px h-8 bg-deep-blue mx-auto"></div>
+                            <div class="mind-node bg-amber-100 text-amber-700 px-4 py-2 rounded-lg text-sm font-medium">合规要点</div>
+                            <div class="w-px h-6 bg-amber-500 mx-auto"></div>
+                            <div class="space-y-2 text-xs text-text-secondary">
+                                <div class="bg-slate-50 px-2 py-1 rounded">设备升级</div>
+                                <div class="bg-slate-50 px-2 py-1 rounded">工艺优化</div>
+                                <div class="bg-slate-50 px-2 py-1 rounded">管理提升</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 问答模式 -->
+    <main id="qa-mode" class="hidden px-4 py-4 pb-24 overflow-y-auto">
+        <div class="space-y-4">
+            <!-- 原问题与回答 -->
+            <div class="space-y-3">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-user text-text-muted text-sm"></i>
+                    </div>
+                    <div class="flex-1 bg-slate-100 rounded-2xl rounded-tl-none p-3">
+                        <p class="text-sm text-text-primary">2026年瓦斯抽采合规标准有哪些变化？</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-xl ai-glow flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="flex-1 bg-white border border-slate-100 rounded-2xl rounded-tl-none p-3">
+                        <p class="text-sm text-text-secondary leading-relaxed">
+                            主要变化包括三方面：<br><br>
+                            <strong class="text-text-primary">1. 计量方式升级：</strong>从"月平均抽采率"改为"实时在线监测"，精度要求±5%<br><br>
+                            <strong class="text-text-primary">2. 抽采率指标提高：</strong>高瓦斯矿井从55%→60%，突出矿井从65%→70%<br><br>
+                            <strong class="text-text-primary">3. 新增智能化要求：</strong>必须配备自动调节和远程监控功能
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 推荐追问 -->
+            <div class="mt-6">
+                <p class="text-xs text-text-muted mb-3">推荐追问</p>
+                <div class="space-y-2">
+                    <button class="w-full text-left p-3 bg-white border border-slate-100 rounded-xl text-sm text-text-secondary hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-lightbulb text-safety-orange mr-2"></i>
+                        设备升级需要多少预算？
+                    </button>
+                    <button class="w-full text-left p-3 bg-white border border-slate-100 rounded-xl text-sm text-text-secondary hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-lightbulb text-safety-orange mr-2"></i>
+                        如何申请智能化改造补贴？
+                    </button>
+                    <button class="w-full text-left p-3 bg-white border border-slate-100 rounded-xl text-sm text-text-secondary hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-lightbulb text-safety-orange mr-2"></i>
+                        抽采不达标会有什么处罚？
+                    </button>
+                </div>
+            </div>
+
+            <!-- 输入框 -->
+            <div class="fixed bottom-0 left-0 right-0 glass-effect border-t border-slate-200/50 p-4">
+                <div class="flex items-center space-x-3">
+                    <input type="text" placeholder="继续追问..." class="flex-1 bg-slate-100 rounded-xl py-3 px-4 text-sm text-text-primary placeholder-text-muted">
+                    <button class="w-12 h-12 ai-glow rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-paper-plane text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 模式切换
+        const modeTabs = document.querySelectorAll('.mode-tab');
+        const documentMode = document.getElementById('document-mode');
+        const mindmapMode = document.getElementById('mindmap-mode');
+        const qaMode = document.getElementById('qa-mode');
+
+        modeTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const mode = this.dataset.mode;
+                
+                // 更新tab样式
+                modeTabs.forEach(t => {
+                    t.classList.remove('bg-deep-blue', 'text-white', 'shadow-sm');
+                    t.classList.add('bg-slate-100', 'text-text-secondary');
+                });
+                this.classList.remove('bg-slate-100', 'text-text-secondary');
+                this.classList.add('bg-deep-blue', 'text-white', 'shadow-sm');
+
+                // 切换内容
+                documentMode.classList.add('hidden');
+                mindmapMode.classList.add('hidden');
+                qaMode.classList.add('hidden');
+
+                if (mode === 'document') {
+                    documentMode.classList.remove('hidden');
+                } else if (mode === 'mindmap') {
+                    mindmapMode.classList.remove('hidden');
+                } else if (mode === 'qa') {
+                    qaMode.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

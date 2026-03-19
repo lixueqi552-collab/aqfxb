@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>风向 - 煤矿安全风向标</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#1e3a5f',
+                        'deep-blue-light': '#2d5a87',
+                        'safety-orange': '#f97316',
+                        'safety-orange-light': '#fb923c',
+                        'alert-red': '#dc2626',
+                        'alert-red-light': '#ef4444',
+                        'bg-primary': '#f8fafc',
+                        'bg-secondary': '#f1f5f9',
+                        'bg-card': '#ffffff',
+                        'text-primary': '#1e293b',
+                        'text-secondary': '#475569',
+                        'text-muted': '#94a3b8',
+                    },
+                    fontFamily: {
+                        'sans': ['Noto Sans SC', 'PingFang SC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+            background-color: #f8fafc;
+        }
+        /* 微卡片流效果 */
+        .news-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .news-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        /* AI光晕效果 */
+        .ai-badge {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4), 0 0 24px rgba(139, 92, 246, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 12px rgba(59, 130, 246, 0.4), 0 0 24px rgba(139, 92, 246, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(59, 130, 246, 0.5), 0 0 32px rgba(139, 92, 246, 0.4);
+            }
+        }
+        /* 毛玻璃效果 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tag-pill {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        ::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        /* AI点评区域样式 */
+        .ai-comment {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-bg-primary text-text-primary">
+    <!-- 顶部状态栏 -->
+    <header class="sticky top-0 z-40 glass-effect border-b border-slate-200/50">
+        <!-- 今日阅读进度 -->
+        <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-wind text-deep-blue text-lg"></i>
+                <span class="font-bold text-lg text-deep-blue">安全风向标</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <!-- 阅读进度 -->
+                <div class="flex items-center space-x-2 bg-deep-blue/10 rounded-full px-3 py-1">
+                    <svg class="progress-ring w-5 h-5" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="#e2e8f0" stroke-width="2" fill="none"/>
+                        <circle cx="12" cy="12" r="10" stroke="#1e3a5f" stroke-width="2" fill="none" 
+                                stroke-dasharray="62.83" stroke-dashoffset="18.85" stroke-linecap="round"/>
+                    </svg>
+                    <span class="text-xs text-deep-blue font-medium">70%</span>
+                </div>
+                <!-- 搜索按钮 -->
+                <button class="w-9 h-9 rounded-full bg-deep-blue/10 flex items-center justify-center hover:bg-deep-blue/20 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass text-sm text-deep-blue"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 分类标签 -->
+        <div class="flex space-x-2 px-4 pb-3 overflow-x-auto">
+            <button class="tag-pill px-4 py-1.5 rounded-full bg-deep-blue text-white text-sm font-medium whitespace-nowrap shadow-sm">
+                全部
+            </button>
+            <button class="tag-pill px-4 py-1.5 rounded-full bg-white/80 text-text-secondary text-sm whitespace-nowrap border border-slate-200">
+                <i class="fa-solid fa-landmark mr-1 text-deep-blue"></i>高层动态
+            </button>
+            <button class="tag-pill px-4 py-1.5 rounded-full bg-white/80 text-text-secondary text-sm whitespace-nowrap border border-slate-200">
+                <i class="fa-solid fa-industry mr-1 text-safety-orange"></i>行业趋势
+            </button>
+            <button class="tag-pill px-4 py-1.5 rounded-full bg-white/80 text-text-secondary text-sm whitespace-nowrap border border-slate-200">
+                <i class="fa-solid fa-triangle-exclamation mr-1 text-alert-red"></i>警示通报
+            </button>
+        </div>
+    </header>
+
+    <!-- 内容区域 -->
+    <main class="px-4 py-4 pb-20 overflow-y-auto h-[calc(100vh-120px)] bg-bg-primary">
+        <!-- 警示通报卡片（置顶） -->
+        <div class="news-card bg-white rounded-2xl p-4 mb-4 border-l-4 border-alert-red relative overflow-hidden cursor-pointer" onclick="window.location.href='news-detail.html'">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-alert-red/5 rounded-full -mr-10 -mt-10"></div>
+            <div class="flex items-start justify-between mb-2">
+                <span class="px-2 py-0.5 bg-alert-red text-white text-xs rounded font-medium">
+                    <i class="fa-solid fa-bell mr-1"></i>警示通报
+                </span>
+                <span class="text-xs text-text-muted">2小时前</span>
+            </div>
+            <h3 class="font-bold text-base mb-2 text-text-primary">山西某煤矿发生瓦斯超限事故 安全监察局紧急通报</h3>
+            <p class="text-sm text-text-secondary mb-3 line-clamp-2">国家矿山安全监察局山西局发布紧急通报，要求全省煤矿企业立即开展瓦斯治理专项检查...</p>
+            
+            <!-- AI点评 -->
+            <div class="ai-comment rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="ai-badge w-6 h-6 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white text-xs"></i>
+                    </div>
+                    <span class="text-deep-blue text-xs font-bold">AI安全政委点评</span>
+                </div>
+                <p class="text-xs text-text-secondary leading-relaxed">
+                    ① 瓦斯超限是煤矿"第一杀手"，需立即核查通风系统；② 建议参考《防治煤与瓦斯突出细则》第28条完善预警机制；③ 近期应组织全员应急演练。
+                </p>
+            </div>
+            
+            <!-- 来源标签 -->
+            <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-text-muted">来源：国家矿山安全监察局</span>
+                </div>
+                <div class="flex items-center space-x-3 text-text-muted">
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 高层动态卡片 -->
+        <div class="news-card bg-white rounded-2xl p-4 mb-4 border-l-4 border-deep-blue cursor-pointer" onclick="window.location.href='news-detail.html'">
+            <div class="flex items-start justify-between mb-2">
+                <span class="px-2 py-0.5 bg-deep-blue text-white text-xs rounded font-medium">
+                    <i class="fa-solid fa-landmark mr-1"></i>高层动态
+                </span>
+                <span class="text-xs text-text-muted">今日</span>
+            </div>
+            <h3 class="font-bold text-base mb-2 text-text-primary">应急管理部发布2026年煤矿安全监管新规草案</h3>
+            <p class="text-sm text-text-secondary mb-3 line-clamp-2">新版《煤矿安全规程》修订草案公开征求意见，重点强化智能化安全监测、瓦斯综合治理等章节...</p>
+            
+            <!-- AI点评 -->
+            <div class="ai-comment rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="ai-badge w-6 h-6 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white text-xs"></i>
+                    </div>
+                    <span class="text-deep-blue text-xs font-bold">AI安全政委点评</span>
+                </div>
+                <p class="text-xs text-text-secondary leading-relaxed">
+                    ① 新规要求井下人员定位系统精度提升至30cm；② 智能化改造期限为2028年底，建议提前规划预算；③ 需关注瓦斯抽采率新指标变化。
+                </p>
+            </div>
+            
+            <div class="flex items-center justify-between mt-3">
+                <span class="text-xs text-text-muted">来源：应急管理部官网</span>
+                <div class="flex items-center space-x-3 text-text-muted">
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 行业趋势卡片 -->
+        <div class="news-card bg-white rounded-2xl p-4 mb-4 border-l-4 border-safety-orange cursor-pointer" onclick="window.location.href='news-detail.html'">
+            <div class="flex items-start justify-between mb-2">
+                <span class="px-2 py-0.5 bg-safety-orange text-white text-xs rounded font-medium">
+                    <i class="fa-solid fa-chart-line mr-1"></i>行业趋势
+                </span>
+                <span class="text-xs text-text-muted">昨日</span>
+            </div>
+            <h3 class="font-bold text-base mb-2 text-text-primary">2025年全国煤矿智能化建设现场会召开 140处智能化煤矿通过验收</h3>
+            <p class="text-sm text-text-secondary mb-3 line-clamp-2">会议总结"十四五"煤矿智能化建设成果，部署"十五五"重点任务，推广先进经验...</p>
+            
+            <!-- AI点评 -->
+            <div class="ai-comment rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="ai-badge w-6 h-6 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white text-xs"></i>
+                    </div>
+                    <span class="text-deep-blue text-xs font-bold">AI安全政委点评</span>
+                </div>
+                <p class="text-xs text-text-secondary leading-relaxed">
+                    ① 智能化改造可降低安全事故率约40%；② 国家补贴政策持续至2027年；③ 建议优先改造通风与排水系统。
+                </p>
+            </div>
+            
+            <div class="flex items-center justify-between mt-3">
+                <span class="text-xs text-text-muted">来源：中国煤炭工业协会</span>
+                <div class="flex items-center space-x-3 text-text-muted">
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 堆叠卡片（同主题多来源） -->
+        <div class="mb-4">
+            <div class="news-card bg-white rounded-2xl p-4 border-l-4 border-purple-500 cursor-pointer" onclick="window.location.href='topic-detail.html'">
+                <div class="flex items-start justify-between mb-2">
+                    <span class="px-2 py-0.5 bg-purple-500 text-white text-xs rounded font-medium">
+                        <i class="fa-solid fa-layer-group mr-1"></i>专题聚合
+                    </span>
+                    <div class="flex items-center space-x-1 text-deep-blue text-xs">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>3篇相关报道</span>
+                    </div>
+                </div>
+                <h3 class="font-bold text-base mb-2 text-text-primary">煤矿安全生产标准化新标准即将实施</h3>
+                <p class="text-sm text-text-secondary mb-3 line-clamp-2">多部委联合发布新修订的煤矿安全生产标准化管理体系考核定级办法...</p>
+                
+                <!-- AI点评 -->
+                <div class="ai-comment rounded-xl p-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="ai-badge w-6 h-6 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-robot text-white text-xs"></i>
+                        </div>
+                        <span class="text-deep-blue text-xs font-bold">AI安全政委点评</span>
+                    </div>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        ① 新标准强化动态达标考核，"临时突击"不再有效；② 风险分级管控权重提升至35%；③ 需在6月前完成自评整改。
+                    </p>
+                </div>
+                
+                <!-- 来源聚合 -->
+                <div class="flex items-center space-x-2 mt-3 overflow-x-auto">
+                    <span class="flex-shrink-0 px-2 py-1 bg-slate-100 rounded-lg text-xs text-text-muted">
+                        国家煤矿安监局
+                    </span>
+                    <span class="flex-shrink-0 px-2 py-1 bg-slate-100 rounded-lg text-xs text-text-muted">
+                        中国煤炭报
+                    </span>
+                    <span class="flex-shrink-0 px-2 py-1 bg-slate-100 rounded-lg text-xs text-text-muted">
+                        安全生产网
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between mt-3">
+                    <span class="text-xs text-text-muted">聚合于 2026-03-18</span>
+                    <div class="flex items-center space-x-3 text-deep-blue">
+                        <button class="flex items-center space-x-1 text-xs font-medium">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>展开阅读</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 更多资讯 -->
+        <div class="news-card bg-white rounded-2xl p-4 mb-4 border-l-4 border-deep-blue cursor-pointer" onclick="window.location.href='news-detail.html'">
+            <div class="flex items-start justify-between mb-2">
+                <span class="px-2 py-0.5 bg-deep-blue text-white text-xs rounded font-medium">
+                    <i class="fa-solid fa-landmark mr-1"></i>高层动态
+                </span>
+                <span class="text-xs text-text-muted">3日前</span>
+            </div>
+            <h3 class="font-bold text-base mb-2 text-text-primary">国家能源局：加快推进煤矿安全生产责任保险全覆盖</h3>
+            <p class="text-sm text-text-secondary mb-3 line-clamp-2">要求各产煤省份在2026年底前实现煤矿安责险全覆盖，强化事故预防服务...</p>
+            
+            <!-- AI点评 -->
+            <div class="ai-comment rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="ai-badge w-6 h-6 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white text-xs"></i>
+                    </div>
+                    <span class="text-deep-blue text-xs font-bold">AI安全政委点评</span>
+                </div>
+                <p class="text-xs text-text-secondary leading-relaxed">
+                    ① 安责险可覆盖事故赔偿最高500万元/人；② 保险公司需提供免费隐患排查服务；③ 投保费用可列入安全生产费用。
+                </p>
+            </div>
+            
+            <div class="flex items-center justify-between mt-3">
+                <span class="text-xs text-text-muted">来源：国家能源局</span>
+                <div class="flex items-center space-x-3 text-text-muted">
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                    <button class="flex items-center space-x-1 text-xs hover:text-deep-blue transition-colors">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 分类标签切换
+        const tags = document.querySelectorAll('.tag-pill');
+        tags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                tags.forEach(t => {
+                    t.classList.remove('bg-deep-blue', 'text-white', 'shadow-sm');
+                    t.classList.add('bg-white/80', 'text-text-secondary', 'border', 'border-slate-200');
+                });
+                this.classList.remove('bg-white/80', 'text-text-secondary', 'border', 'border-slate-200');
+                this.classList.add('bg-deep-blue', 'text-white', 'shadow-sm');
+            });
+        });
+
+        // 收藏按钮交互
+        document.querySelectorAll('.fa-bookmark').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (this.classList.contains('fa-regular')) {
+                    this.classList.remove('fa-regular');
+                    this.classList.add('fa-solid', 'text-safety-orange');
+                } else {
+                    this.classList.remove('fa-solid', 'text-safety-orange');
+                    this.classList.add('fa-regular');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

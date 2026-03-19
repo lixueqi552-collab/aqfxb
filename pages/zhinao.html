@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智脑 - 煤矿安全风向标</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#1e3a5f',
+                        'deep-blue-light': '#2d5a87',
+                        'safety-orange': '#f97316',
+                        'alert-red': '#dc2626',
+                        'bg-primary': '#f8fafc',
+                        'bg-secondary': '#f1f5f9',
+                        'bg-card': '#ffffff',
+                        'text-primary': '#1e293b',
+                        'text-secondary': '#475569',
+                        'text-muted': '#94a3b8',
+                    },
+                    fontFamily: {
+                        'sans': ['Noto Sans SC', 'PingFang SC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+            background-color: #f8fafc;
+        }
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+        }
+        .suggestion-chip {
+            transition: all 0.2s ease;
+        }
+        .suggestion-chip:active {
+            transform: scale(0.95);
+        }
+        .history-item {
+            transition: background-color 0.2s ease;
+        }
+        .history-item:active {
+            background-color: #f1f5f9;
+        }
+        /* AI光晕效果 */
+        .ai-glow {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.3);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        /* 毛玻璃效果 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        ::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-bg-primary text-text-primary">
+    <!-- 主容器 -->
+    <div id="main-container" class="h-full flex flex-col">
+        <!-- 搜索模式 -->
+        <div id="search-mode" class="flex-1 flex flex-col">
+            <!-- 顶部标题 -->
+            <header class="pt-12 pb-6 px-6 text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="w-14 h-14 rounded-2xl ai-glow flex items-center justify-center float-animation">
+                        <i class="fa-solid fa-brain text-white text-2xl"></i>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold text-deep-blue mb-2">AI 安全政委</h1>
+                <p class="text-text-secondary text-sm">智能政策解读 · 结构化研究报告</p>
+            </header>
+
+            <!-- 搜索框 -->
+            <div class="px-4 mb-6">
+                <div class="relative">
+                    <input type="text" 
+                           id="search-input"
+                           class="search-input w-full bg-white border border-slate-200 rounded-2xl py-4 px-5 pr-24 text-base placeholder-text-muted shadow-sm"
+                           placeholder="输入安全法规问题，如：瓦斯抽采新规有哪些变化？">
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                        <button id="voice-btn" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-text-muted hover:bg-slate-200 transition-colors">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <button id="search-btn" class="w-10 h-10 rounded-xl bg-deep-blue flex items-center justify-center text-white shadow-sm">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快捷建议 -->
+            <div class="px-4 mb-6">
+                <p class="text-xs text-text-muted mb-3">热门问题</p>
+                <div class="flex flex-wrap gap-2">
+                    <button class="suggestion-chip px-4 py-2 bg-white border border-slate-200 rounded-full text-sm text-text-secondary shadow-sm" onclick="startSearch('2026年瓦斯抽采合规标准有哪些变化？')">
+                        <i class="fa-solid fa-fire text-safety-orange mr-1"></i>
+                        瓦斯抽采新规变化
+                    </button>
+                    <button class="suggestion-chip px-4 py-2 bg-white border border-slate-200 rounded-full text-sm text-text-secondary shadow-sm" onclick="startSearch('煤矿安全生产标准化考核要点是什么？')">
+                        标准化考核要点
+                    </button>
+                    <button class="suggestion-chip px-4 py-2 bg-white border border-slate-200 rounded-full text-sm text-text-secondary shadow-sm" onclick="startSearch('井下人员定位系统最新技术要求')">
+                        人员定位系统要求
+                    </button>
+                    <button class="suggestion-chip px-4 py-2 bg-white border border-slate-200 rounded-full text-sm text-text-secondary shadow-sm" onclick="startSearch('煤矿智能化改造补贴政策汇总')">
+                        智能化改造补贴
+                    </button>
+                </div>
+            </div>
+
+            <!-- 搜索历史 -->
+            <div class="px-4 flex-1 overflow-y-auto pb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-xs text-text-muted">搜索历史</p>
+                    <button class="text-xs text-text-muted hover:text-deep-blue transition-colors">清空</button>
+                </div>
+                <div class="space-y-2">
+                    <div class="history-item flex items-center justify-between p-3 bg-white rounded-xl cursor-pointer shadow-sm border border-slate-100" onclick="startSearch('煤矿通风系统安全管理规定')">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-clock-rotate-left text-text-muted"></i>
+                            <span class="text-sm text-text-secondary">煤矿通风系统安全管理规定</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-text-muted text-xs"></i>
+                    </div>
+                    <div class="history-item flex items-center justify-between p-3 bg-white rounded-xl cursor-pointer shadow-sm border border-slate-100" onclick="startSearch('煤矿安全规程修订条款解读')">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-clock-rotate-left text-text-muted"></i>
+                            <span class="text-sm text-text-secondary">煤矿安全规程修订条款解读</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-text-muted text-xs"></i>
+                    </div>
+                    <div class="history-item flex items-center justify-between p-3 bg-white rounded-xl cursor-pointer shadow-sm border border-slate-100" onclick="startSearch('瓦斯抽采达标评判细则')">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-clock-rotate-left text-text-muted"></i>
+                            <span class="text-sm text-text-secondary">瓦斯抽采达标评判细则</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-text-muted text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+
+        // 开始搜索
+        function startSearch(query) {
+            if (query) {
+                searchInput.value = query;
+            }
+            // 跳转到搜索结果页面
+            window.location.href = 'search-result.html?q=' + encodeURIComponent(searchInput.value || '2026年瓦斯抽采合规标准有哪些变化？');
+        }
+
+        // 搜索按钮点击
+        searchBtn.addEventListener('click', function() {
+            if (searchInput.value.trim()) {
+                startSearch(searchInput.value);
+            }
+        });
+
+        // 回车搜索
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && searchInput.value.trim()) {
+                startSearch(searchInput.value);
+            }
+        });
+    </script>
+</body>
+</html>
